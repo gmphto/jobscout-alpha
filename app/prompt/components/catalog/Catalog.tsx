@@ -1,6 +1,9 @@
-import React, { useMemo } from 'react'
+'use client'
+
+import React, { useMemo, useState } from 'react'
 import { z } from 'zod'
 import { PromptSchema } from '../../types'
+import Command from './components/Command'
 
 export const CatalogPropsSchema = z.object({
   prompts: z.array(PromptSchema).optional(),
@@ -22,7 +25,11 @@ function getColorIndicator(category: string): string {
 }
 
 export default function Catalog(props: CatalogProps) {
-  const { prompts = [], searchTerm, categoryFilter } = props
+  const { prompts = [], searchTerm: initialSearchTerm = '', categoryFilter } = props
+  
+  // Local state for command center
+  const [activeFilter, setActiveFilter] = useState<'new' | 'top' | 'trending'>('new')
+  const [searchTerm, setSearchTerm] = useState(initialSearchTerm)
 
   // Memoized filtering to optimize performance
   const filteredPrompts = useMemo(() => {
@@ -37,15 +44,27 @@ export default function Catalog(props: CatalogProps) {
     })
   }, [prompts, searchTerm, categoryFilter])
 
+  const handleCreatePrompt = () => {
+    // TODO: Implement prompt creation logic
+    console.log('Create new prompt clicked')
+  }
+
   // Show empty state when no prompts
   if (filteredPrompts.length === 0) {
     return (
       <div className="min-h-screen bg-gray-50 py-8">
         <div className="max-w-4xl mx-auto px-4">
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <Command
+              activeFilter={activeFilter}
+              searchTerm={searchTerm}
+              onFilterChange={setActiveFilter}
+              onSearchChange={setSearchTerm}
+              onCreatePrompt={handleCreatePrompt}
+            />
             <div className="px-8 py-12 flex flex-col items-center justify-center min-h-[600px]">
               <div className="max-w-md mx-auto text-center">
-                <h2 className="text-2xl font-semibold text-gray-700 mb-4">
+                <h2 className="text-2xl font-medium text-gray-900 mb-4">
                   No Submissions Yet
                 </h2>
                 <p className="text-gray-600 mb-8 leading-relaxed">
@@ -53,11 +72,14 @@ export default function Catalog(props: CatalogProps) {
                   the button below to join the<br />
                   conversation.
                 </p>
-                <button className="text-gray-500 font-semibold inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                <button 
+                  onClick={handleCreatePrompt}
+                  className="shadow-sm inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                >
                   <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                   </svg>
-                  Create first post
+                  Create new prompt
                 </button>
               </div>
 
@@ -99,6 +121,13 @@ export default function Catalog(props: CatalogProps) {
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-4xl mx-auto px-4">
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+          <Command
+            activeFilter={activeFilter}
+            searchTerm={searchTerm}
+            onFilterChange={setActiveFilter}
+            onSearchChange={setSearchTerm}
+            onCreatePrompt={handleCreatePrompt}
+          />
           <div className="p-6">
             <div className="space-y-4">
               {filteredPrompts.map(prompt => (
