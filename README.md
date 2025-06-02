@@ -6,5 +6,11 @@ Typescript + Nextjs + Tailwind
 Supabase - Posgresql 
 Stripe
 
+AI:
+
+OpenAI o4-mini (cheapest and most cost-effective)
+
+Inputs: PDF, URL, Text
+
 
 
