@@ -2,3 +2,8 @@
 /.cursor
 .env
 /.next
+
+
+# Local env files
+.env*.local
+.env

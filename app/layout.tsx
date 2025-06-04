@@ -4,6 +4,7 @@ import { GeistSans } from 'geist/font/sans'
 import './globals.css'
 import Header from './components/Header'
 import GlobalSignInModal from './components/GlobalSignInModal'
+import AuthWrapper from './components/AuthWrapper'
 import { AuthProvider } from './contexts/AuthContext'
 
 export const metadata: Metadata = {
@@ -20,9 +21,11 @@ export default function RootLayout({
     <html lang="en">
       <body className={GeistSans.className}>
         <AuthProvider>
-          <Header />
-          {children}
-          <GlobalSignInModal />
+          <AuthWrapper>
+            <Header />
+            {children}
+            <GlobalSignInModal />
+          </AuthWrapper>
         </AuthProvider>
       </body>
     </html>
