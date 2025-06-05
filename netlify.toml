@@ -1,6 +1,5 @@
 [build]
   command = "npm run build"
-  publish = ".next"
 
 [build.environment]
   NODE_VERSION = "18"
@@ -10,10 +9,6 @@
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
-# API routes as Netlify Functions
-[functions]
-  directory = ".netlify/functions"
-
 # Headers for security and CORS
 [[headers]]
   for = "/api/*"
@@ -22,18 +17,8 @@
     Access-Control-Allow-Methods = "GET, POST, PUT, DELETE, OPTIONS"
     Access-Control-Allow-Headers = "Content-Type, Authorization"
 
-# Redirect all API calls to Next.js API routes
-[[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/nextjs/:splat"
-  status = 200
-
-# Handle client-side routing
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-  conditions = {Role = ["client"]}
+# Handle client-side routing (let Next.js plugin handle routing)
+# No redirects needed when using @netlify/plugin-nextjs
 
 # Environment variables (you'll need to set these in Netlify dashboard)
 # NEXT_PUBLIC_SUPABASE_URL
@@ -47,5 +32,4 @@
 # Development settings
 [dev]
   command = "npm run dev"
-  port = 3000
-  publish = ".next" 
+  port = 3000 
